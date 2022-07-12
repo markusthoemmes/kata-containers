@@ -126,24 +126,27 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: kata-static-tarball
-      - name: build-and-push-kata-deploy-ci
-        id: build-and-push-kata-deploy-ci
-        run: |
-          PR_SHA=$(git log --format=format:%H -n1)
-          mv kata-static.tar.xz $GITHUB_WORKSPACE/tools/packaging/kata-deploy/kata-static.tar.xz
-          docker build --build-arg KATA_ARTIFACTS=kata-static.tar.xz -t quay.io/kata-containers/kata-deploy-ci:$PR_SHA $GITHUB_WORKSPACE/tools/packaging/kata-deploy
-          docker login -u ${{ secrets.QUAY_DEPLOYER_USERNAME }} -p ${{ secrets.QUAY_DEPLOYER_PASSWORD }} quay.io
-          docker push quay.io/kata-containers/kata-deploy-ci:$PR_SHA
-          mkdir -p packaging/kata-deploy
-          ln -s $GITHUB_WORKSPACE/tools/packaging/kata-deploy/action packaging/kata-deploy/action
-          echo "::set-output name=PKG_SHA::${PR_SHA}"
-      - name: test-kata-deploy-ci-in-aks
-        uses: ./packaging/kata-deploy/action
-        with:
-          packaging-sha: ${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}}
-        env:
-          PKG_SHA: ${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}}
-          AZ_APPID: ${{ secrets.AZ_APPID }}
-          AZ_PASSWORD: ${{ secrets.AZ_PASSWORD }}
-          AZ_SUBSCRIPTION_ID: ${{ secrets.AZ_SUBSCRIPTION_ID }}
-          AZ_TENANT_ID: ${{ secrets.AZ_TENANT_ID }}
+      # NOTE(cbaker): We disable building/pushing/validating kata-deploy as we don't us it and the test
+      #   coverage it provides is better covered by the App Platform e2e tests.
+      # 
+      # - name: build-and-push-kata-deploy-ci
+      #   id: build-and-push-kata-deploy-ci
+      #   run: |
+      #     PR_SHA=$(git log --format=format:%H -n1)
+      #     mv kata-static.tar.xz $GITHUB_WORKSPACE/tools/packaging/kata-deploy/kata-static.tar.xz
+      #     docker build --build-arg KATA_ARTIFACTS=kata-static.tar.xz -t quay.io/kata-containers/kata-deploy-ci:$PR_SHA $GITHUB_WORKSPACE/tools/packaging/kata-deploy
+      #     docker login -u ${{ secrets.QUAY_DEPLOYER_USERNAME }} -p ${{ secrets.QUAY_DEPLOYER_PASSWORD }} quay.io
+      #     docker push quay.io/kata-containers/kata-deploy-ci:$PR_SHA
+      #     mkdir -p packaging/kata-deploy
+      #     ln -s $GITHUB_WORKSPACE/tools/packaging/kata-deploy/action packaging/kata-deploy/action
+      #     echo "::set-output name=PKG_SHA::${PR_SHA}"
+      # - name: test-kata-deploy-ci-in-aks
+      #   uses: ./packaging/kata-deploy/action
+      #   with:
+      #     packaging-sha: ${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}}
+      #   env:
+      #     PKG_SHA: ${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}}
+      #     AZ_APPID: ${{ secrets.AZ_APPID }}
+      #     AZ_PASSWORD: ${{ secrets.AZ_PASSWORD }}
+      #     AZ_SUBSCRIPTION_ID: ${{ secrets.AZ_SUBSCRIPTION_ID }}
+      #     AZ_TENANT_ID: ${{ secrets.AZ_TENANT_ID }}

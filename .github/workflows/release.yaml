@@ -62,57 +62,60 @@ jobs:
           name: kata-static-tarball
           path: kata-static.tar.xz
 
-  kata-deploy:
-    needs: create-kata-tarball
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: get-kata-tarball
-        uses: actions/download-artifact@v2
-        with:
-          name: kata-static-tarball
-      - name: build-and-push-kata-deploy-ci
-        id: build-and-push-kata-deploy-ci
-        run: |
-          tag=$(echo $GITHUB_REF | cut -d/ -f3-)
-          pushd $GITHUB_WORKSPACE
-          git checkout $tag
-          pkg_sha=$(git rev-parse HEAD)
-          popd
-          mv kata-static.tar.xz $GITHUB_WORKSPACE/tools/packaging/kata-deploy/kata-static.tar.xz
-          docker build --build-arg KATA_ARTIFACTS=kata-static.tar.xz -t katadocker/kata-deploy-ci:$pkg_sha -t quay.io/kata-containers/kata-deploy-ci:$pkg_sha $GITHUB_WORKSPACE/tools/packaging/kata-deploy
-          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-          docker push katadocker/kata-deploy-ci:$pkg_sha
-          docker login -u ${{ secrets.QUAY_DEPLOYER_USERNAME }} -p ${{ secrets.QUAY_DEPLOYER_PASSWORD }} quay.io
-          docker push quay.io/kata-containers/kata-deploy-ci:$pkg_sha
-          mkdir -p packaging/kata-deploy
-          ln -s $GITHUB_WORKSPACE/tools/packaging/kata-deploy/action packaging/kata-deploy/action
-          echo "::set-output name=PKG_SHA::${pkg_sha}"
-      - name: test-kata-deploy-ci-in-aks
-        uses: ./packaging/kata-deploy/action
-        with:
-          packaging-sha: ${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}}
-        env:
-          PKG_SHA: ${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}}
-          AZ_APPID: ${{ secrets.AZ_APPID }}
-          AZ_PASSWORD: ${{ secrets.AZ_PASSWORD }}
-          AZ_SUBSCRIPTION_ID: ${{ secrets.AZ_SUBSCRIPTION_ID }}
-          AZ_TENANT_ID: ${{ secrets.AZ_TENANT_ID }}
-      - name: push-tarball
-        run: |
-          # tag the container image we created and push to DockerHub
-          tag=$(echo $GITHUB_REF | cut -d/ -f3-)
-          tags=($tag)
-          tags+=($([[ "$tag" =~ "alpha"|"rc" ]] && echo "latest" || echo "stable"))
-          for tag in ${tags[@]}; do \
-            docker tag katadocker/kata-deploy-ci:${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}} katadocker/kata-deploy:${tag} && \
-            docker tag quay.io/kata-containers/kata-deploy-ci:${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}} quay.io/kata-containers/kata-deploy:${tag} && \
-            docker push katadocker/kata-deploy:${tag} && \
-            docker push quay.io/kata-containers/kata-deploy:${tag}; \
-          done
+  # NOTE(cbaker): We disable building/pushing/validating kata-deploy as we don't us it and the test
+  #   coverage it provides is better covered by the App Platform e2e tests.
+  # 
+  # kata-deploy:
+  #   needs: create-kata-tarball
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: get-kata-tarball
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: kata-static-tarball
+  #     - name: build-and-push-kata-deploy-ci
+  #       id: build-and-push-kata-deploy-ci
+  #       run: |
+  #         tag=$(echo $GITHUB_REF | cut -d/ -f3-)
+  #         pushd $GITHUB_WORKSPACE
+  #         git checkout $tag
+  #         pkg_sha=$(git rev-parse HEAD)
+  #         popd
+  #         mv kata-static.tar.xz $GITHUB_WORKSPACE/tools/packaging/kata-deploy/kata-static.tar.xz
+  #         docker build --build-arg KATA_ARTIFACTS=kata-static.tar.xz -t katadocker/kata-deploy-ci:$pkg_sha -t quay.io/kata-containers/kata-deploy-ci:$pkg_sha $GITHUB_WORKSPACE/tools/packaging/kata-deploy
+  #         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+  #         docker push katadocker/kata-deploy-ci:$pkg_sha
+  #         docker login -u ${{ secrets.QUAY_DEPLOYER_USERNAME }} -p ${{ secrets.QUAY_DEPLOYER_PASSWORD }} quay.io
+  #         docker push quay.io/kata-containers/kata-deploy-ci:$pkg_sha
+  #         mkdir -p packaging/kata-deploy
+  #         ln -s $GITHUB_WORKSPACE/tools/packaging/kata-deploy/action packaging/kata-deploy/action
+  #         echo "::set-output name=PKG_SHA::${pkg_sha}"
+  #     - name: test-kata-deploy-ci-in-aks
+  #       uses: ./packaging/kata-deploy/action
+  #       with:
+  #         packaging-sha: ${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}}
+  #       env:
+  #         PKG_SHA: ${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}}
+  #         AZ_APPID: ${{ secrets.AZ_APPID }}
+  #         AZ_PASSWORD: ${{ secrets.AZ_PASSWORD }}
+  #         AZ_SUBSCRIPTION_ID: ${{ secrets.AZ_SUBSCRIPTION_ID }}
+  #         AZ_TENANT_ID: ${{ secrets.AZ_TENANT_ID }}
+  #     - name: push-tarball
+  #       run: |
+  #         # tag the container image we created and push to DockerHub
+  #         tag=$(echo $GITHUB_REF | cut -d/ -f3-)
+  #         tags=($tag)
+  #         tags+=($([[ "$tag" =~ "alpha"|"rc" ]] && echo "latest" || echo "stable"))
+  #         for tag in ${tags[@]}; do \
+  #           docker tag katadocker/kata-deploy-ci:${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}} katadocker/kata-deploy:${tag} && \
+  #           docker tag quay.io/kata-containers/kata-deploy-ci:${{steps.build-and-push-kata-deploy-ci.outputs.PKG_SHA}} quay.io/kata-containers/kata-deploy:${tag} && \
+  #           docker push katadocker/kata-deploy:${tag} && \
+  #           docker push quay.io/kata-containers/kata-deploy:${tag}; \
+  #         done
 
   upload-static-tarball:
-    needs: kata-deploy
+    needs: create-kata-tarball
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -132,7 +135,7 @@ jobs:
           mv kata-static.tar.xz "$GITHUB_WORKSPACE/${tarball}"
           pushd $GITHUB_WORKSPACE
           echo "uploading asset '${tarball}' for tag: ${tag}"
-          GITHUB_TOKEN=${{ secrets.GIT_UPLOAD_TOKEN }} hub release edit -m "" -a "${tarball}" "${tag}"
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} hub release edit -m "" -a "${tarball}" "${tag}"
           popd
 
   upload-cargo-vendored-tarball:
@@ -146,17 +149,17 @@ jobs:
           tarball="kata-containers-$tag-vendor.tar.gz"
           pushd $GITHUB_WORKSPACE
           bash -c "tools/packaging/release/generate_vendor.sh ${tarball}"
-          GITHUB_TOKEN=${{ secrets.GIT_UPLOAD_TOKEN }} hub release edit -m "" -a "${tarball}" "${tag}" 
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} hub release edit -m "" -a "${tarball}" "${tag}" 
           popd
 
   upload-libseccomp-tarball:
-    needs: upload-cargo-vendored-tarball
+    needs: upload-static-tarball
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: download-and-upload-tarball
         env:
-          GITHUB_TOKEN: ${{ secrets.GIT_UPLOAD_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GOPATH: ${HOME}/go
         run: |
           pushd $GITHUB_WORKSPACE
