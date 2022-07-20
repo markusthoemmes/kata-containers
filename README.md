@@ -1,3 +1,9 @@
+# DigitalOcean Kata Containers Fork
+This fork is maintained for DigitalOcean App Platform. Please see [this guide](.digitalocean/README.md) for information about building and maintaining our fork.
+
+---
+---
+
 <img src="https://www.openstack.org/assets/kata/kata-vertical-on-white.png" width="150">
 
 # Kata Containers
