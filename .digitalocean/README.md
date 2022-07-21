@@ -66,7 +66,7 @@ git checkout -b "do/$upstream_tag"
 git cherry-pick upstream/main...do/main # Pull in changes from do/main
 
 # Tag and push the release. CI assumes this starts w/ "2."
-release_tag="$upstream_tag-digitalocean-0"
+release_tag="$upstream_tag+do.0"
 git tag "$release_tag"
 git push -u origin "$release_tag"
 ```
