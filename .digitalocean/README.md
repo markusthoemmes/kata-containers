@@ -87,7 +87,7 @@ https://github.com/digitalocean/kata-containers/releases/download/$release_tag/$
 The upstream release pipeline includes minimal validation at release time.  In short, a 
 [kata-deploy](../tools/packaging/kata-deploy/README.md) container image is build, pushed, and 
 deployed to an Azure AKS cluster. App Platform deploys kata via the 
-[doks-runtimes](https://github.com/digitalocean/doks-runtimes) package, which is validated the
+[doks-runtimes](https://github.com/digitalocean/doks-runtimes) package, which is validated with
 App Platform pre-release e2e tests before use in production. These tests cover a broader range of
 scenarios than the kata-deploy validations, and we have decided to accept these as sufficient
 validation.
