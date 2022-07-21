@@ -77,7 +77,9 @@ git tag "$release_tag"
 git push -u origin "$release_tag"
 ```
 
-[Draft a new release on the fork's github project](https://github.com/digitalocean/kata-containers/releases/new). Select the tag. The release name should be set to match the tag. 
+[//]: # (NOTE: Because this repo is private, the static-check link check will fail. Including the $ works around this. https://github.com/kata-containers/tests/blob/773554c04fa0d335205b7f85ce80076fed62710d/.ci/static-checks.sh#L717)
+
+[Draft a new release on the fork's github project](https://github.com/digitalocean/kata-containers/releases/new?$). Select the tag. The release name should be set to match the tag. 
 
 ![Release Dialog](release.png "release dialog")
 
