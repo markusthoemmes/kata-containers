@@ -1,8 +1,11 @@
+
+[//]: # (NOTE: Because this repo is private, the static-check link check will fail. Including the $ works around this. https://github.com/kata-containers/tests/blob/773554c04fa0d335205b7f85ce80076fed62710d/.ci/static-checks.sh#L717)
+
 # DigitalOcean App Platform Kata Containers Fork
 
 The App Platform team maintains a private fork for the purposes of building patched kata-container,
 linux, and QEMU binaries. This mechanism should be exercised for every kata-containers update used
-in App Platform's [doks-runtimes](https://github.com/digitalocean/doks-runtimes) node upgrader.  
+in App Platform's [doks-runtimes](https://github.com/digitalocean/doks-runtimes?$) node upgrader.  
 
 ## Versions
 The kata containers project selects component versions based upon the [versions.yaml](../versions.yaml) file in the root of the project.  
@@ -77,8 +80,6 @@ git tag "$release_tag"
 git push -u origin "$release_tag"
 ```
 
-[//]: # (NOTE: Because this repo is private, the static-check link check will fail. Including the $ works around this. https://github.com/kata-containers/tests/blob/773554c04fa0d335205b7f85ce80076fed62710d/.ci/static-checks.sh#L717)
-
 [Draft a new release on the fork's github project](https://github.com/digitalocean/kata-containers/releases/new?$). Select the tag. The release name should be set to match the tag. 
 
 ![Release Dialog](release.png "release dialog")
@@ -88,14 +89,14 @@ Publish the release.
 Github Actions should begin to generate assets, the primary one being:
 
 ```
-https://github.com/digitalocean/kata-containers/releases/download/$release_tag/$release_tag-x86_64.tar.xz
+https://github.com/digitalocean/kata-containers/releases/download/$release_tag/$release_tag-x86_64.tar.xz?$
 ```
 
 ### Testing and Validation
 The upstream release pipeline includes minimal validation at release time.  In short, a 
 [kata-deploy](../tools/packaging/kata-deploy/README.md) container image is build, pushed, and 
 deployed to an Azure AKS cluster. App Platform deploys kata via the 
-[doks-runtimes](https://github.com/digitalocean/doks-runtimes) package, which is validated with
+[doks-runtimes](https://github.com/digitalocean/doks-runtimes?$) package, which is validated with
 App Platform pre-release e2e tests before use in production. These tests cover a broader range of
 scenarios than the kata-deploy validations, and we have decided to accept these as sufficient
 validation.
