@@ -39,6 +39,12 @@ git checkout do/main # This should be the default.
 ```
 
 ### Adding Patches or Updating this Document
+If feasible (considering time and security) non-critical patches should be made upstream in the 
+[public kata containers repo](https://github.com/kata-containers/kata-containers). Once accepted
+and released these can be pulled in as part of the typical release pattern.
+
+In the event of time-critical update or changes specific to this fork's documentation / release
+tooling, use the following instructions. 
 
 Patches to QEMU or the Guest Linux Kernel should first pull-requested against the `do/main` branch. This will ensure they're carried forward for future stable releases. 
 
