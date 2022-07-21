@@ -126,7 +126,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: kata-static-tarball
-      # NOTE(cbaker): We disable building/pushing/validating kata-deploy as we don't us it and the test
+      # NOTE(cbaker): We disable building/pushing/validating kata-deploy as we don't use it and the test
       #   coverage it provides is better covered by the App Platform e2e tests.
       # 
       # - name: build-and-push-kata-deploy-ci

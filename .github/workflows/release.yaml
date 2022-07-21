@@ -62,7 +62,7 @@ jobs:
           name: kata-static-tarball
           path: kata-static.tar.xz
 
-  # NOTE(cbaker): We disable building/pushing/validating kata-deploy as we don't us it and the test
+  # NOTE(cbaker): We disable building/pushing/validating kata-deploy as we don't use it and the test
   #   coverage it provides is better covered by the App Platform e2e tests.
   # 
   # kata-deploy:
