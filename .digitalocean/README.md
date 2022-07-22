@@ -5,7 +5,8 @@
 
 The App Platform team maintains a private fork for the purposes of building patched kata-container,
 linux, and QEMU binaries. This mechanism should be exercised for every kata-containers update used
-in App Platform's [doks-runtimes](https://github.com/digitalocean/doks-runtimes?$) node upgrader.  
+in App Platform's [doks-runtimes](https://github.com/digitalocean/doks-runtimes?$) node upgrade
+tooling.  
 
 ## Versions
 The kata containers project selects component versions based upon the [versions.yaml](../versions.yaml) file in the root of the project.  
