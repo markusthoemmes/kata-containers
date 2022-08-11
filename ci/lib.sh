@@ -35,7 +35,7 @@ clone_tests_repo()
 		git checkout "${branch}"
 		popd
 	fi
-	cp -v ".digitalocean/dictionary.txt" "${tests_repo_dir}/cmd/check-spelling/data/digitalocean.txt"
+	cp -v "~/work/kata-containers/kata-containers/src/github.com/digitalocean/kata-containers/.digitalocean/dictionary.txt" "${tests_repo_dir}/cmd/check-spelling/data/digitalocean.txt"
 }
 
 run_static_checks()
