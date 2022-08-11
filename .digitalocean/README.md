@@ -4,7 +4,7 @@
 # DigitalOcean App Platform Kata Containers Fork
 
 The App Platform team maintains a private fork for the purposes of building patched kata-container,
-linux, and QEMU binaries. This mechanism should be exercised for every kata-containers update used
+Linux, and QEMU binaries. This mechanism should be exercised for every kata-containers update used
 in App Platform's [doks-runtimes](https://github.com/digitalocean/doks-runtimes?$) node upgrade
 tooling.  
 
@@ -23,10 +23,10 @@ tools/packaging/qemu/patches/tag_patches/$qemu_version
 ```
 
 ## Guest Linux Kernel Patches
-The GitHub actions associated with this project will build and package linux for use as the guest
-kernel for containers. Kata includes a small number of patches against the vanilla linux project.
+The GitHub actions associated with this project will build and package Linux for use as the guest
+kernel for containers. Kata includes a small number of patches against the vanilla Linux project.
 Additional patches may be included in our fork for security or bug fix reasons. Patches are
-structured by minor version. For example, for linux v5.15.48 (`yq eval .assets.kernel.version versions.yaml`) patches should be contributed to `tools/packaging/kernel/patches/5.4.x`.
+structured by minor version. For example, for Linux v5.15.48 (`yq eval .assets.kernel.version versions.yaml`) patches should be contributed to `tools/packaging/kernel/patches/5.4.x`.
 
 ## Releasing
 Kata Containers cuts release tags from stable branches (ex. `stable-2.5`). These branch ultimately tie back to `main` but include many backports/cherry-picks. 
@@ -81,13 +81,13 @@ git tag "$release_tag"
 git push -u origin "$release_tag"
 ```
 
-[Draft a new release on the fork's github project](https://github.com/digitalocean/kata-containers/releases/new?$). Select the tag. The release name should be set to match the tag. 
+[Draft a new release on the fork's GitHub project](https://github.com/digitalocean/kata-containers/releases/new?$). Select the tag. The release name should be set to match the tag. 
 
 ![Release Dialog](release.png "release dialog")
 
 Publish the release.
 
-Github Actions should begin to generate assets, the primary one being:
+GitHub Actions should begin to generate assets, the primary one being:
 
 ```
 https://github.com/digitalocean/kata-containers/releases/download/$release_tag/$release_tag-x86_64.tar.xz?$

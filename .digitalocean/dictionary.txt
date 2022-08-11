@@ -2,3 +2,4 @@
 # executed as part of the CI static checks.
 
 DigitalOcean/B
+doks/B
