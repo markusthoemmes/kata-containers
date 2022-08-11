@@ -47,12 +47,6 @@ jobs:
       with:
         fetch-depth: 0
         path: ./src/github.com/${{ github.repository }}
-    # NOTE(cbaker) - We remove the .digitalocean folder for static checks because it causes
-    # spelling and url check problems.
-    - name: Remove .digitalocean folder
-      if: ${{ !contains(github.event.pull_request.labels.*.name, 'force-skip-ci') }}
-      run: |
-        cd ${GOPATH}/src/github.com/${{ github.repository }} && rm -rf .digitalocean   
     - name: Setup travis references
       if: ${{ !contains(github.event.pull_request.labels.*.name, 'force-skip-ci') }}
       run: |
