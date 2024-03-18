@@ -1,0 +1,5 @@
+# This file amends the seplling checks done by https://github.com/kata-containers/tests/tree/main/cmd/check-spelling
+# executed as part of the CI static checks.
+
+DigitalOcean/B
+doks/B

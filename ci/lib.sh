@@ -9,6 +9,8 @@ export tests_repo="${tests_repo:-github.com/kata-containers/tests}"
 export tests_repo_dir="$GOPATH/src/$tests_repo"
 export branch="${target_branch:-main}"
 
+export kata_containers_repo_dir=$(cd "$(dirname "${BASH_SOURCE[0]}")" &> /dev/null && pwd)/../
+
 # Clones the tests repository and checkout to the branch pointed out by
 # the global $branch variable.
 # If the clone exists and `CI` is exported then it does nothing. Otherwise
@@ -35,6 +37,7 @@ clone_tests_repo()
 		git checkout "${branch}"
 		popd
 	fi
+	cp -v "${kata_containers_repo_dir}/.digitalocean/dictionary.txt" "${tests_repo_dir}/cmd/check-spelling/data/digitalocean.txt"
 }
 
 run_static_checks()
